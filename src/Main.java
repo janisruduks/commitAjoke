@@ -8,6 +8,7 @@ public class Main {
     public static void main(String[] args) throws IOException {
 
         ProcessBuilder pb = new ProcessBuilder("git", "commit", "-m", getData());
+        Process p = pb.start();
     }
 
     public static String getData() throws IOException {
