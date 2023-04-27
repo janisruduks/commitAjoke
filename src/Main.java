@@ -5,29 +5,40 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class Main {
-    public static void main(String[] args) throws IOException {
-
-        ProcessBuilder pb = new ProcessBuilder("git", "commit", "-m", getData());
-        Process p = pb.start();
+    public static void main(String[] args) {
+        try {
+            String getQuote = getData();
+            ProcessBuilder processBuilder = new ProcessBuilder("git", "commit", "-m", getQuote);
+            processBuilder.start();
+        } catch (IOException error){
+            System.out.println("Error occurred while building terminal command: " + error.getMessage());
+        }
     }
 
-    public static String getData() throws IOException {
-        URL url = new URL("https://api.gameofthronesquotes.xyz/v1/random");
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-        connection.setRequestMethod("GET");
+    public static String getData() {
+        String quote = "";
 
-        BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-        String inputline;
-        StringBuilder content = new StringBuilder();
-        while((inputline = in.readLine()) != null) {
-            content.append(inputline);
+        try{
+            URL url = new URL("https://api.gameofthronesquotes.xyz/v1/random");
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
+
+            BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            String inputline;
+            StringBuilder content = new StringBuilder();
+            while((inputline = in.readLine()) != null) {
+                content.append(inputline);
+            }
+
+            in.close();
+            connection.disconnect();
+            String[] getQuote = content.toString().split("\"");
+
+            quote = getQuote[3];
+
+        } catch(IOException error){
+            System.out.println("Error occurred while pulling data: " + error.getMessage());
         }
-
-        in.close();
-        connection.disconnect();
-
-        String[] contentful = content.toString().split("\"");
-
-        return contentful[3];
+        return quote;
     }
 }
