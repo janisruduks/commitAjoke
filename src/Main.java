@@ -10,6 +10,7 @@ public class Main {
             String getQuote = getData();
             ProcessBuilder processBuilder = new ProcessBuilder("git", "commit", "-m", getQuote);
             processBuilder.start();
+            System.out.println("Done...\nRandom quote you got is: " + getQuote);
         } catch (IOException error){
             System.out.println("Error occurred while building terminal command: " + error.getMessage());
         }
